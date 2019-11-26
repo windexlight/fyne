@@ -433,6 +433,7 @@ func (w *window) frameSized(viewport *glfw.Window, width, height int) {
 }
 
 func (w *window) refresh(viewport *glfw.Window) {
+	freeDirtyTextures(w.canvas)
 	forceWindowRefresh(w)
 	w.canvas.setDirty(true)
 }

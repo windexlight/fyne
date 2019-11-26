@@ -73,7 +73,7 @@ func (d *gLDriver) runGL() {
 		case <-settingsChange:
 			clearFontCache()
 		case <-fps.C:
-			glfw.PollEvents()
+			glfw.PollEvents() // This call blocks while window is being resized, which prevents freeDirtyTextures from being called
 			newWindows := []fyne.Window{}
 			reassign := false
 			for _, win := range d.windows {
@@ -99,7 +99,7 @@ func (d *gLDriver) runGL() {
 				}
 
 				w.runWithContext(func() {
-					d.freeDirtyTextures(canvas)
+					freeDirtyTextures(canvas)
 
 					gl.UseProgram(canvas.program)
 
@@ -119,7 +119,7 @@ func (d *gLDriver) runGL() {
 	}
 }
 
-func (d *gLDriver) freeDirtyTextures(canvas *glCanvas) {
+func freeDirtyTextures(canvas *glCanvas) {
 	for {
 		select {
 		case object := <-canvas.refreshQueue:
